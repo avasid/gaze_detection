@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 
-label_df = pd.read_csv("./label_data.csv", index_col=0)
+label_df = pd.read_csv("./data/label_data.csv", index_col=0)
 
 
 def process_data(lst: list) -> (list, list):
@@ -13,7 +13,8 @@ def process_data(lst: list) -> (list, list):
     length = str(len(lst))
     for i, element in enumerate(lst):
         print("Processing " + str(i + 1) + " of " + length)
-        image = np.array(Image.open("./data/all/" + element).convert('RGB'), dtype=np.int8) / 255
+        folder = ['down', 'up', 'left', 'right'][label_df.loc[element, :].values.argmax()]
+        image = np.array(Image.open("./data/img_data/" + folder + "/" + element).convert('RGB'), dtype=np.int8) / 255
         image = (image - np.mean(image)) / np.std(image)
         rtn_data.append(image)
         rtn_label.append(label_df.loc[element, :])
@@ -24,12 +25,14 @@ limit = int(label_df.shape[0] * 0.75)
 train_data = label_df.index[:limit]
 test_data = label_df.index[limit:]
 
+print("Train Data")
 X_train, y_train = process_data(train_data)
+print("Test Data")
 X_test, y_test = process_data(test_data)
 
 
-def saving2disk(lst: list, name: str) -> None:
-    with open("./" + name, 'wb+') as fh:
+def saving2disk(lst: list, name: str):
+    with open("./data/" + name, 'wb+') as fh:
         pickle.dump(lst, fh)
 
 
