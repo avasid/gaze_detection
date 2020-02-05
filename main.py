@@ -9,10 +9,10 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.regularizers import l2
 
 with open("./data/X_train", 'rb') as fh:
-    X_train = np.array(pickle.load(fh))
+    X_train = pickle.load(fh)
 
 with open("./data/y_train", 'rb') as fh:
-    y_train = np.array(pickle.load(fh))
+    y_train = pickle.load(fh)
 
 
 def resnet_block(inputs, num_filters, kernel_size, strides, activation='relu'):
