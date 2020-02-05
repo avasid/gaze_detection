@@ -15,10 +15,8 @@ def process_data(lst: list) -> (list, list):
     for i, element in enumerate(lst):
         print("Processing " + str(i + 1) + " of " + len_str)
         folder = ['down', 'up', 'left', 'right'][label_df.loc[element, :].values.argmax()]
-        image = np.array(Image.open("./data/img_data/" + folder + "/" + element).convert('RGB'), dtype=np.int8) / 255
-        for j in range(3):
-            image[:, :, j] = (image[:, :, j] - np.mean(image[:, :, j])) / np.std(image[:, :, j])
-        rtn_data[i, :, :, :] = image
+        rtn_data[i, :, :, :] = np.array(Image.open("./data/img_data/" + folder + "/" + element).convert('RGB'),
+                                        dtype=np.int8) / 255
         rtn_label[i, :] = label_df.loc[element, :]
     return rtn_data, rtn_label
 
@@ -33,7 +31,7 @@ print("Test Data")
 X_test, y_test = process_data(test_data)
 
 
-def saving2disk(lst: list, name: str):
+def saving2disk(lst: np.ndarray, name: str):
     with open("./data/" + name, 'wb+') as fh:
         pickle.dump(lst, fh)
         print(name + " dumped.")

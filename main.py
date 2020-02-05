@@ -2,7 +2,7 @@ import pickle
 
 import numpy as np
 from tensorflow.keras.callbacks import LearningRateScheduler, ReduceLROnPlateau, ModelCheckpoint
-from tensorflow.keras.layers import Conv2D, GlobalAveragePooling2D, Input, BatchNormalization, Activation, MaxPooling2D, \
+from tensorflow.keras.layers import Conv2D, GlobalAveragePooling2D, Input, Activation, MaxPooling2D, \
     add, Dense
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
@@ -18,7 +18,6 @@ with open("./data/y_train", 'rb') as fh:
 def resnet_block(inputs, num_filters, kernel_size, strides, activation='relu'):
     x = Conv2D(num_filters, kernel_size=kernel_size, strides=strides, padding='same',
                kernel_initializer='he_normal', kernel_regularizer=l2(1e-3))(inputs)
-    x = BatchNormalization()(x)
     if (activation):
         x = Activation('relu')(x)
     return x
