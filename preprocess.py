@@ -8,17 +8,18 @@ label_df = pd.read_csv("./data/label_data.csv", index_col=0)
 
 
 def process_data(lst: list) -> (list, list):
-    rtn_data = []
-    rtn_label = []
-    length = str(len(lst))
+    length = len(lst)
+    len_str = str(length)
+    rtn_data = np.zeros((length, 100, 150, 3), dtype=np.float16)
+    rtn_label = np.zeros((length, 4), dtype=np.uint8)
     for i, element in enumerate(lst):
-        print("Processing " + str(i + 1) + " of " + length)
+        print("Processing " + str(i + 1) + " of " + len_str)
         folder = ['down', 'up', 'left', 'right'][label_df.loc[element, :].values.argmax()]
         image = np.array(Image.open("./data/img_data/" + folder + "/" + element).convert('RGB'), dtype=np.int8) / 255
         for j in range(3):
             image[:, :, j] = (image[:, :, j] - np.mean(image[:, :, j])) / np.std(image[:, :, j])
-        rtn_data.append(image)
-        rtn_label.append(label_df.loc[element, :])
+        rtn_data[i, :, :, :] = image
+        rtn_label[i, :] = label_df.loc[element, :]
     return rtn_data, rtn_label
 
 
@@ -35,6 +36,7 @@ X_test, y_test = process_data(test_data)
 def saving2disk(lst: list, name: str):
     with open("./data/" + name, 'wb+') as fh:
         pickle.dump(lst, fh)
+        print(name + " dumped.")
 
 
 saving2disk(X_train, "X_train")
