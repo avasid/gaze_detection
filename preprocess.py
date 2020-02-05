@@ -15,7 +15,8 @@ def process_data(lst: list) -> (list, list):
         print("Processing " + str(i + 1) + " of " + length)
         folder = ['down', 'up', 'left', 'right'][label_df.loc[element, :].values.argmax()]
         image = np.array(Image.open("./data/img_data/" + folder + "/" + element).convert('RGB'), dtype=np.int8) / 255
-        image = (image - np.mean(image)) / np.std(image)
+        for j in range(3):
+            image[:, :, j] = (image[:, :, j] - np.mean(image[:, :, j])) / np.std(image[:, :, j])
         rtn_data.append(image)
         rtn_label.append(label_df.loc[element, :])
     return rtn_data, rtn_label
