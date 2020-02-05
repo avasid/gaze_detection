@@ -80,7 +80,7 @@ def lr_sch(epoch):
 
 
 lr_scheduler = LearningRateScheduler(lr_sch)
-lr_reducer = ReduceLROnPlateau(monitor='categorical_crossentropy', factor=0.2, patience=5, mode='min', min_lr=1e-3)
+lr_reducer = ReduceLROnPlateau(monitor='loss', factor=0.2, patience=5, mode='min', min_lr=1e-3)
 
 checkpoint = ModelCheckpoint('model.h5', monitor='val_loss', verbose=0, save_best_only=True, mode='auto')
 
